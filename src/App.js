@@ -1,48 +1,34 @@
-import { useState, useEffect } from 'react'
-const lessons = [
-  { id: 1, name: 'html course' },
-  { id: 2, name: 'react course' },
-  { id: 3, name: 'node js course' },
-]
+import { useRef, useState, useEffect } from 'react'
+
 function Content() {
-  const [lessonId, setLessonId] = useState(1)
-  useEffect(() => {
-    const handleComment = ({ detail }) => {
-      console.log(detail)
-    }
-    window.addEventListener(`lesson-${lessonId}`, handleComment)
-    return () => {
-      window.removeEventListener(`lesson-${lessonId}`, handleComment)
-    }
-  }, [lessonId])
+  const [count, setCount] = useState(60)
+  let timeRef = useRef()
+  console.log(timeRef)
+  useEffect(() => {}, [count])
+  const handleStart = () => {
+    timeRef.current = setInterval(() => {
+      setCount((prevCount) => prevCount - 1)
+      // console.log(count)
+    }, 1000)
+  }
+
+  const handleStop = () => {
+    console.log('stop')
+    clearInterval(timeRef.current)
+  }
   return (
     <div>
-      <h2>Content</h2>
-      <ul>
-        {lessons.map((lesson) => (
-          <li
-            style={{ color: lessonId === lesson.id ? 'red' : '#333' }}
-            onClick={() => setLessonId(lesson.id)}
-            key={lesson.id}
-          >
-            {lesson.name}
-          </li>
-        ))}
-      </ul>
+      <h1>{count}</h1>
+      <button onClick={handleStart}>start</button>
+      <button onClick={handleStop}>stop</button>
     </div>
   )
 }
 
 function App() {
-  const [isShow, setIsShow] = useState(false)
-  const handleToggle = () => {
-    setIsShow(!isShow)
-  }
-  console.log(isShow)
   return (
     <div className="App">
-      <button onClick={handleToggle}>Toggle</button>
-      {isShow && <Content />}
+      <Content />
     </div>
   )
 }
